@@ -62,10 +62,13 @@ const cleanName = (_str) => {
   return nameWithoutWeight;
 };
 
+// Gets all the possibilities for the given attribute. Filters out hidden files (.blah)
 const getElements = (path) => {
   return fs
     .readdirSync(path)
-    .filter((item) => !/(^|\/)\.[^\/\.]/g.test(item))
+    .filter((item) => {
+      return !/(^|\/)\.[^\/\.]/g.test(item);
+    })
     .map((i, index) => {
       return {
         id: index,
@@ -77,22 +80,26 @@ const getElements = (path) => {
     });
 };
 
+// Given the list of layers, extracts the needed information from each directory
 const layersSetup = (layersOrder) => {
   const layers = layersOrder.map((layerObj, index) => ({
     id: index,
     elements: getElements(`${layersDir}/${layerObj.name}/`),
-    name:
-      layerObj.options?.["displayName"] != undefined
-        ? layerObj.options?.["displayName"]
-        : layerObj.name,
-    blend:
-      layerObj.options?.["blend"] != undefined
-        ? layerObj.options?.["blend"]
-        : "source-over",
-    opacity:
-      layerObj.options?.["opacity"] != undefined
-        ? layerObj.options?.["opacity"]
-        : 1,
+    name: layerObj.options
+      ? layerObj.options["displayName"] != undefined
+        ? layerObj.options["displayName"]
+        : layerObj.name
+      : layerObj.name,
+    blend: layerObj.options
+      ? layerObj.options["blend"] != undefined
+        ? layerObj.options["blend"]
+        : "source-over"
+      : "source-over",
+    opacity: layerObj.options
+      ? layerObj.options["opacity"] != undefined
+        ? layerObj.options["opacity"]
+        : 1
+      : 1,
   }));
   return layers;
 };
@@ -177,6 +184,10 @@ const drawElement = (_renderObject, _index, _layersLen) => {
 };
 
 const constructLayerToDna = (_dna = "", _layers = []) => {
+  console.log("DNA: " + _dna);
+  console.log("Layers ");
+  console.log(JSON.stringify(_layers));
+
   let mappedDnaToLayers = _layers.map((layer, index) => {
     let selectedElement = layer.elements.find(
       (e) => e.id == cleanDna(_dna.split(DNA_DELIMITER)[index])
@@ -195,6 +206,12 @@ const isDnaUnique = (_DnaList = new Set(), _dna = "") => {
   return !_DnaList.has(_dna);
 };
 
+/** 
+Choose attribute on each layer based on the based on it's rarity weighting 
+The higher the weighting, the higher chance of getting it (weightings are relative not percentage)
+Adds all weights together, picks random number and the attribute to "stop" on that number is
+chosen
+**/
 const createDna = (_layers) => {
   let randNum = [];
   _layers.forEach((layer) => {
@@ -214,7 +231,9 @@ const createDna = (_layers) => {
       }
     }
   });
-  return randNum.join(DNA_DELIMITER);
+
+  const dna = randNum.join(DNA_DELIMITER);
+  return dna;
 };
 
 const writeMetaData = (_data) => {
@@ -260,16 +279,20 @@ const startCreating = async () => {
   ) {
     abstractedIndexes.push(i);
   }
+
   if (shuffleLayerConfigurations) {
     abstractedIndexes = shuffle(abstractedIndexes);
   }
+
   debugLogs
     ? console.log("Editions left to create: ", abstractedIndexes)
     : null;
+
   while (layerConfigIndex < layerConfigurations.length) {
     const layers = layersSetup(
       layerConfigurations[layerConfigIndex].layersOrder
     );
+
     while (
       editionCount <= layerConfigurations[layerConfigIndex].growEditionSizeTo
     ) {
