@@ -13,12 +13,12 @@ const layerConfigurations = [
     growEditionSizeTo: 5,
     layersOrder: [
       { name: "Background" },
-      { name: "Eyeball" },
-      { name: "Eye color" },
-      { name: "Iris" },
-      { name: "Shine" },
-      { name: "Bottom lid" },
-      { name: "Top lid" },
+      { name: "Skin" },
+      { name: "Face" },
+      { name: "Eyes" },
+      // { name: "Shine" },
+      // { name: "Bottom lid" },
+      // { name: "Top lid" },
     ],
   },
 ];
@@ -28,8 +28,8 @@ const shuffleLayerConfigurations = false;
 const debugLogs = false;
 
 const format = {
-  width: 512,
-  height: 512,
+  width: 1080,
+  height: 1080,
 };
 
 const text = {
@@ -55,6 +55,10 @@ const background = {
   static: false,
   default: "#000000",
 };
+
+const encodeImage = true;
+
+const maxNumPerJsonFile = 5;
 
 const extraMetadata = {};
 
@@ -83,4 +87,6 @@ module.exports = {
   extraMetadata,
   pixelFormat,
   text,
+  encodeImage,
+  maxNumPerJsonFile,
 };

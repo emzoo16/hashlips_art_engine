@@ -9,6 +9,7 @@ const { createCanvas, loadImage } = require(path.join(
   basePath,
   "/node_modules/canvas"
 ));
+
 const buildDir = path.join(basePath, "/build");
 const layersDir = path.join(basePath, "/layers");
 const {
@@ -23,6 +24,8 @@ const {
   debugLogs,
   extraMetadata,
   text,
+  encodeImage,
+  maxNumPerJsonFile,
 } = require(path.join(basePath, "/src/config.js"));
 const canvas = createCanvas(format.width, format.height);
 const ctx = canvas.getContext("2d");
@@ -37,6 +40,7 @@ const buildSetup = () => {
   }
   fs.mkdirSync(buildDir);
   fs.mkdirSync(path.join(buildDir, "/json"));
+  fs.mkdirSync(path.join(buildDir, "/json/metadataLists"));
   fs.mkdirSync(path.join(buildDir, "/images"));
 };
 
@@ -122,13 +126,14 @@ const drawBackground = () => {
   ctx.fillRect(0, 0, format.width, format.height);
 };
 
-const addMetadata = (_dna, _edition) => {
+const addMetadata = (_dna, _edition, encoded_image) => {
   let dateTime = Date.now();
+  let image = encodeImage ? encoded_image : `${baseUri}/${_edition}.png`;
   let tempMetadata = {
     dna: sha1(_dna),
     name: `#${_edition}`,
     description: description,
-    image: `${baseUri}/${_edition}.png`,
+    image: image,
     edition: _edition,
     date: dateTime,
     ...extraMetadata,
@@ -237,7 +242,22 @@ const createDna = (_layers) => {
 };
 
 const writeMetaData = (_data) => {
-  fs.writeFileSync(`${buildDir}/json/_metadata.json`, _data);
+  let index = 0;
+  if (maxNumPerJsonFile > 1 && maxNumPerJsonFile < _data.length) {
+    while (_data.length > 0) {
+      const dataPiece = _data.splice(0, maxNumPerJsonFile);
+      fs.writeFileSync(
+        `${buildDir}/json/metadataLists/${index}_metadata.json`,
+        JSON.stringify(dataPiece, null, 2)
+      );
+      index++;
+    }
+  } else {
+    fs.writeFileSync(
+      `${buildDir}/json/metadataLists/0_metadata.json`,
+      JSON.stringify(_data, null, 2)
+    );
+  }
 };
 
 const saveMetaDataSingleFile = (_editionCount) => {
@@ -265,6 +285,11 @@ function shuffle(array) {
     ];
   }
   return array;
+}
+
+function base64_encode(file) {
+  var contents = fs.readFileSync(file, { encoding: "base64" });
+  return contents;
 }
 
 const startCreating = async () => {
@@ -322,8 +347,13 @@ const startCreating = async () => {
             ? console.log("Editions left to create: ", abstractedIndexes)
             : null;
           saveImage(abstractedIndexes[0]);
-          addMetadata(newDna, abstractedIndexes[0]);
+
+          const encoded_image = encodeImage
+            ? base64_encode(`${buildDir}/images/${abstractedIndexes[0]}.png`)
+            : null;
+          addMetadata(newDna, abstractedIndexes[0], encoded_image);
           saveMetaDataSingleFile(abstractedIndexes[0]);
+
           console.log(
             `Created edition: ${abstractedIndexes[0]}, with DNA: ${sha1(
               newDna
@@ -346,7 +376,7 @@ const startCreating = async () => {
     }
     layerConfigIndex++;
   }
-  writeMetaData(JSON.stringify(metadataList, null, 2));
+  writeMetaData(metadataList);
 };
 
 module.exports = { startCreating, buildSetup, getElements };
