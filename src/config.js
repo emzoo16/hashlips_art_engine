@@ -4,13 +4,12 @@ const path = require("path");
 const isLocal = typeof process.pkg === "undefined";
 const basePath = isLocal ? process.cwd() : path.dirname(process.execPath);
 const { MODE } = require(path.join(basePath, "constants/blend_mode.js"));
-const description =
-  "This is the description of your NFT project, remember to replace this";
+const description = "Test test";
 const baseUri = "ipfs://NewUriToReplace";
 
 const layerConfigurations = [
   {
-    growEditionSizeTo: 5,
+    growEditionSizeTo: 13,
     layersOrder: [
       { name: "Background" },
       { name: "Skin" },
@@ -23,26 +22,9 @@ const layerConfigurations = [
   },
 ];
 
-const shuffleLayerConfigurations = false;
-
-const debugLogs = false;
-
 const format = {
-  width: 1080,
-  height: 1080,
-};
-
-const text = {
-  only: false,
-  color: "#ffffff",
-  size: 20,
-  xGap: 40,
-  yGap: 40,
-  align: "left",
-  baseline: "top",
-  weight: "regular",
-  family: "Courier",
-  spacer: " => ",
+  width: 639,
+  height: 639,
 };
 
 const pixelFormat = {
@@ -57,6 +39,8 @@ const background = {
 };
 
 const encodeImage = true;
+
+const checkpoint = 3;
 
 const maxNumPerJsonFile = 5;
 
@@ -82,11 +66,9 @@ module.exports = {
   layerConfigurations,
   rarityDelimiter,
   preview,
-  shuffleLayerConfigurations,
-  debugLogs,
   extraMetadata,
   pixelFormat,
-  text,
   encodeImage,
   maxNumPerJsonFile,
+  checkpoint,
 };

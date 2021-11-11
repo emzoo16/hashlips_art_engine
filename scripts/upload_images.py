@@ -43,10 +43,10 @@ for file in os.listdir(metadata_directory):
 
             print("processing " + nft_metadata["name"])
 
-            # response = requests.post(
-            #     base_endpoint + api_key + "/" + project_id,
-            #     data=json.dumps(request_body),
-            #     headers=headers,
-            # )
+            response = requests.post(
+                base_endpoint + api_key + "/" + project_id,
+                data=json.dumps(request_body),
+                headers=headers,
+            )
 
-            # print(response.text)
+            print(response.text)
