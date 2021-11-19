@@ -13,7 +13,7 @@ const { createCanvas, loadImage } = require(path.join(
 const helper = require(path.join(basePath, "/src/helper.js"));
 
 const buildDir = path.join(basePath, "/build");
-const layersDir = path.join(basePath, "/layers");
+const layersDir = path.join(basePath, "/resized");
 const {
   format,
   baseUri,
@@ -276,6 +276,7 @@ const writeMetaData = (_data) => {
 };
 
 const startCreating = async () => {
+  console.time("Execution time");
   let layerConfigIndex = 0;
   let failedCount = 0;
   let abstractedIndexes = [];
@@ -349,6 +350,7 @@ const startCreating = async () => {
     layerConfigIndex++;
     writeMetaData(metadataList);
     console.log("Finished.");
+    console.timeEnd("Execution time");
   }
 };
 

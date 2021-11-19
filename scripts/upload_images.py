@@ -5,12 +5,15 @@ import pprint
 import json
 
 base_endpoint = "https://api.nft-maker.io/uploadNft/"
-api_key = "e149c398bcc843f3b020cefd19feda72"
-project_id = "20729"
+api_key = "155878c9c1484144a0ff3c715821aa9d"
+project_id = "22065"
 
 metadata_directory = "../build/json/metadataLists/"
 
 for file in os.listdir(metadata_directory):
+    if file.startswith("."):
+        continue
+
     print(file)
     with open("../build/json/metadataLists/" + file) as metadata:
         metadataList = json.load(metadata)
@@ -22,7 +25,7 @@ for file in os.listdir(metadata_directory):
             for attribute in nft_metadata["attributes"]:
                 attribute_value = {}
 
-                attribute_value["key"] = attribute["trait_type"]
+                attribute_value["name"] = attribute["trait_type"]
                 attribute_value["value"] = attribute["value"]
 
                 metadata_placeholders.append(attribute_value)

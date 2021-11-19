@@ -9,7 +9,7 @@ const baseUri = "ipfs://NewUriToReplace";
 
 const layerConfigurations = [
   {
-    growEditionSizeTo: 13,
+    growEditionSizeTo: 100,
     layersOrder: [
       { name: "Background" },
       { name: "Skin" },
@@ -23,8 +23,8 @@ const layerConfigurations = [
 ];
 
 const format = {
-  width: 639,
-  height: 639,
+  width: 1080,
+  height: 1080,
 };
 
 const pixelFormat = {
@@ -40,9 +40,9 @@ const background = {
 
 const encodeImage = true;
 
-const checkpoint = 3;
+const checkpoint = 50;
 
-const maxNumPerJsonFile = 5;
+const maxNumPerJsonFile = 50;
 
 const extraMetadata = {};
 
