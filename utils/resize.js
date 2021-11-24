@@ -2,6 +2,7 @@
 
 const { createCanvas, loadImage } = require("canvas");
 const fs = require("fs");
+const { exit } = require("process");
 
 const isLocal = typeof process.pkg === "undefined";
 const basePath = isLocal ? process.cwd() : path.dirname(process.execPath);
@@ -22,10 +23,6 @@ const resizeAndSave = async (image_path, output_path) => {
 
   fs.writeFileSync(output_path, canvas.toBuffer("image/png"));
 };
-
-if (fs.existsSync(resizedLayersDir)) {
-  fs.rmdirSync(resizedLayersDir, { recursive: true });
-}
 
 fs.mkdirSync(resizedLayersDir);
 

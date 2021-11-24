@@ -18,12 +18,14 @@
     "preview": "node utils/preview.js",
     "pixelate": "node utils/pixelate.js",
     "update_info": "node utils/update_info.js",
-    "resize": "node utils/resize.js"
+    "resize": "node utils/resize.js",
+    "create_gif": "node utils/create_gif.js"
   },
   "author": "Daniel Eugene Botha (HashLips)",
   "license": "MIT",
   "dependencies": {
     "canvas": "^2.8.0",
+    "gifencoder": "^2.0.1",
     "sha1": "^1.1.1",
     "sharp": "^0.29.3"
   }

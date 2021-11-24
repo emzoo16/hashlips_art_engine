@@ -9,11 +9,12 @@ const baseUri = "ipfs://NewUriToReplace";
 
 const layerConfigurations = [
   {
-    growEditionSizeTo: 100,
+    growEditionSizeTo: 250,
     layersOrder: [
-      { name: "Background" },
-      { name: "Skin" },
+      // { name: "Background" },
+      // { name: "Skin" },
       { name: "Face" },
+      { name: "Cheeks" },
       { name: "Eyes" },
       // { name: "Shine" },
       // { name: "Bottom lid" },
